@@ -19,6 +19,11 @@ class HalamanRegistrasi extends StatelessWidget {
             children: [
               const TextField(
                 decoration: InputDecoration(
+                  labelText: 'Nama',
+                ),
+              ),
+              const TextField(
+                decoration: InputDecoration(
                   labelText: 'NIM (optional)',
                 ),
               ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'halaman_registrasi.dart';
 
 class HalamanLogin extends StatelessWidget {
-  const HalamanLogin({Key? key}) : super(key: key);
+  const HalamanLogin({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +16,13 @@ class HalamanLogin extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Email / NIM',
                 ),
               ),
               const SizedBox(height: 16),
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Password',
                 ),
