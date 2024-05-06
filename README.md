@@ -25,6 +25,7 @@
 - Button: "Kembali"
 - Text: "Register"
 - Body:
+  - Input field for "Nama"
   - Input field for "NIM (optional)"
   - Input field for "Email"
   - Input field for "Password"
