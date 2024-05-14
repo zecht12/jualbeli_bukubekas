@@ -1,7 +1,7 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
-import 'package:jualbeli_buku_bekas/books_search.dart';
+import 'package:jualbeli_buku_bekas/cari_buku.dart';
 import 'package:jualbeli_buku_bekas/halaman_login.dart';
 import 'daftar_buku.dart';
 import 'halaman_tambah_buku.dart';
