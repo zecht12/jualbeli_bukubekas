@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'halaman_login.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+final supabase = Supabase.instance.client;
+
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'https://lrltciikazzktjvgelnq.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxybHRjaWlrYXp6a3RqdmdlbG5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU2NzM4MjksImV4cCI6MjAzMTI0OTgyOX0.9lwrCE1wCNOe-pcJwzdk0LjYW-Rk5qlAvNi0XfRPQl8',
+  );
   runApp(const MyApp());
 }
 
