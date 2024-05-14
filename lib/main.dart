@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'halaman_login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final supabase = Supabase.instance.client;
-
 Future<void> main() async {
   await Supabase.initialize(
     url: 'https://lrltciikazzktjvgelnq.supabase.co',
@@ -11,6 +9,8 @@ Future<void> main() async {
   );
   runApp(const MyApp());
 }
+
+final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
