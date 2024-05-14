@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'halaman_login.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-Future<void> main() async {
-  await Supabase.initialize(
-    url: 'https://lrltciikazzktjvgelnq.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxybHRjaWlrYXp6a3RqdmdlbG5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU2NzM4MjksImV4cCI6MjAzMTI0OTgyOX0.9lwrCE1wCNOe-pcJwzdk0LjYW-Rk5qlAvNi0XfRPQl8',
-  );
+void main() {
   runApp(const MyApp());
 }
-
-final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
