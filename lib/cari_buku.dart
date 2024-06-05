@@ -40,29 +40,25 @@ class _CariBukuState extends State<CariBuku> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _searchTerm.isEmpty
-            ? FirebaseFirestore.instance.collection('books').snapshots()
-            : FirebaseFirestore.instance
-                .collection('books')
-                .where('judul', isGreaterThanOrEqualTo: _searchTerm)
-                .where('judul', isLessThanOrEqualTo: '$_searchTerm\uf8ff')
-                .snapshots(),
+        stream: FirebaseFirestore.instance.collection('books').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
           var books = snapshot.data!.docs;
-          books = books.where((doc) {
-            var data = doc.data() as Map<String, dynamic>;
-            var penulis = data['penulis'].toString().toLowerCase();
-            var kategori = data['kategori'].toString().toLowerCase();
-            var judul = data['judul'].toString().toLowerCase();
+          if (_searchTerm.isNotEmpty) {
+            books = books.where((doc) {
+              var data = doc.data() as Map<String, dynamic>;
+              var penulis = data['penulis'].toString().toLowerCase();
+              var kategori = data['kategori'].toString().toLowerCase();
+              var judul = data['judul'].toString().toLowerCase();
 
-            return penulis.contains(_searchTerm) ||
-                kategori.contains(_searchTerm) ||
-                judul.contains(_searchTerm);
-          }).toList();
+              return penulis.contains(_searchTerm) ||
+                  kategori.contains(_searchTerm) ||
+                  judul.contains(_searchTerm);
+            }).toList();
+          }
 
           if (books.isEmpty) {
             return const Center(child: Text('No books found.'));
@@ -76,7 +72,13 @@ class _CariBukuState extends State<CariBuku> {
                 padding: const EdgeInsets.all(5.0),
                 child: ListTile(
                   title: Text(book['judul']),
-                  subtitle: Text('Penulis: ${book['penulis']}'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Penulis: ${book['penulis']}'),
+                      Text('Kategori: ${book['kategori']}'), // Added this line
+                    ],
+                  ),
                   trailing: Text('Harga: Rp ${book['harga']}'),
                   onTap: () {
                     Navigator.push(

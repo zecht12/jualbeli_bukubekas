@@ -18,18 +18,21 @@ class DaftarBuku extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var book = snapshot.data!.docs[index];
+              bool isReady = book['status'] == 'ready';
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HalamanCheckout(
-                        bookId: book.id,
-                        bookTitle: book['judul'],
-                        bookPrice: book['harga'].toDouble(),
+                  if (isReady) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HalamanCheckout(
+                          bookId: book.id,
+                          bookTitle: book['judul'],
+                          bookPrice: book['harga'].toDouble(),
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: Card(
                   child: Column(
@@ -42,10 +45,18 @@ class DaftarBuku extends StatelessWidget {
                           children: [
                             Text(book['judul'], style: const TextStyle(fontSize: 20)),
                             Text('Penulis: ${book['penulis']}', style: const TextStyle(fontSize: 16)),
+                            Text('Kategori: ${book['kategori']}', style: const TextStyle(fontSize: 16)), // Added this line
                             Text('Harga: Rp ${book['harga']}', style: const TextStyle(fontSize: 16)),
                             Text('Jumlah Buku: ${book['jumlah_buku']}', style: const TextStyle(fontSize: 16)),
                             Text('Jumlah Halaman: ${book['jumlah_halaman']}', style: const TextStyle(fontSize: 16)),
                             Text('Tahun Penggunaan: ${book['tahun_penggunaan']}', style: const TextStyle(fontSize: 16)),
+                            Text(
+                              book['status'] == 'terjual' ? 'Terjual' : 'Ready',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: book['status'] == 'terjual' ? Colors.red : (isReady ? Colors.green : Colors.black),
+                              ),
+                            ),
                           ],
                         ),
                       ),
