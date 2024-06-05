@@ -14,7 +14,17 @@ class HalamanUtama extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CariBuku()),
+            );
+          },
+        ),
         title: const Text('Toko Buku'),
+        centerTitle: true,
         actions: [
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
@@ -46,25 +56,6 @@ class HalamanUtama extends StatelessWidget {
             },
           ),
         ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            ListTile(
-              title: const Text(
-                'Cari',
-                style: TextStyle(fontSize: 30),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CariBuku()), // Navigate to CariBuku
-                );
-              },
-            ),
-          ],
-        ),
       ),
       body: const DaftarBuku(),
     );
