@@ -1,37 +1,103 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: library_private_types_in_public_api
 
-class BookSearchDelegate extends SearchDelegate<String> {
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'halaman_checkout.dart';
+
+class CariBuku extends StatefulWidget {
+  const CariBuku({super.key});
+
   @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
+  _CariBukuState createState() => _CariBukuState();
+}
+
+class _CariBukuState extends State<CariBuku> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchTerm = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Cari judul, penulis, atau kategori',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  _searchTerm = _searchController.text.toLowerCase().trim();
+                });
+              },
+            ),
+          ),
+          onSubmitted: (value) {
+            setState(() {
+              _searchTerm = value.toLowerCase().trim();
+            });
+          },
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _searchTerm.isEmpty
+            ? FirebaseFirestore.instance.collection('books').snapshots()
+            : FirebaseFirestore.instance
+                .collection('books')
+                .where('judul', isGreaterThanOrEqualTo: _searchTerm)
+                .where('judul', isLessThanOrEqualTo: '$_searchTerm\uf8ff')
+                .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          var books = snapshot.data!.docs;
+          books = books.where((doc) {
+            var data = doc.data() as Map<String, dynamic>;
+            var penulis = data['penulis'].toString().toLowerCase();
+            var kategori = data['kategori'].toString().toLowerCase();
+            var judul = data['judul'].toString().toLowerCase();
+
+            return penulis.contains(_searchTerm) ||
+                kategori.contains(_searchTerm) ||
+                judul.contains(_searchTerm);
+          }).toList();
+
+          if (books.isEmpty) {
+            return const Center(child: Text('No books found.'));
+          }
+
+          return ListView.builder(
+            itemCount: books.length,
+            itemBuilder: (context, index) {
+              var book = books[index];
+              return Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: ListTile(
+                  title: Text(book['judul']),
+                  subtitle: Text('Penulis: ${book['penulis']}'),
+                  trailing: Text('Harga: Rp ${book['harga']}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HalamanCheckout(
+                          bookId: book.id,
+                          bookTitle: book['judul'],
+                          bookPrice: (book['harga'] is int)
+                              ? (book['harga'] as int).toDouble()
+                              : book['harga'],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
         },
       ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, "");
-      },
     );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-
-    return Container();
   }
 }

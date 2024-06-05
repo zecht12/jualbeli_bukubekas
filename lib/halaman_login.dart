@@ -1,42 +1,60 @@
-import 'package:flutter/material.dart';
-import 'halaman_registrasi.dart';
+// ignore_for_file: use_build_context_synchronously, avoid_print, unused_local_variable, library_private_types_in_public_api
 
-class HalamanLogin extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'halaman_registrasi.dart';
+import 'halaman_utama.dart';
+
+class HalamanLogin extends StatefulWidget {
   const HalamanLogin({super.key});
+
+  @override
+  _HalamanLoginState createState() => _HalamanLoginState();
+}
+
+class _HalamanLoginState extends State<HalamanLogin> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HalamanUtama()),
+      );
+    } on FirebaseAuthException catch (e) {
+      print('Error: ${e.message}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      appBar: AppBar(title: const Text('Login')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Email / NIM',
-                ),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
               const SizedBox(height: 16),
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                ),
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  // Implement login logic
-                },
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 20),
-                ),
+                onPressed: _login,
+                child: const Text('Login', style: TextStyle(fontSize: 20)),
               ),
               const SizedBox(height: 16),
               TextButton(
@@ -46,10 +64,7 @@ class HalamanLogin extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const HalamanRegistrasi()),
                   );
                 },
-                child: const Text(
-                  'Belum punya akun? Registrasi',
-                  style: TextStyle(fontSize: 16),
-                ),
+                child: const Text('Belum punya akun? Registrasi', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),

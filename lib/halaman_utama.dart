@@ -1,10 +1,11 @@
-// ignore_for_file: use_super_parameters
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:jualbeli_buku_bekas/cari_buku.dart';
-import 'package:jualbeli_buku_bekas/halaman_login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'daftar_buku.dart';
 import 'halaman_tambah_buku.dart';
+import 'halaman_login.dart';
+import 'cari_buku.dart';
 
 class HalamanUtama extends StatelessWidget {
   const HalamanUtama({super.key});
@@ -28,13 +29,14 @@ class HalamanUtama extends StatelessWidget {
                 ),
               ];
             },
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'add_book') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HalamanTambahBuku()),
                 );
               } else if (value == 'sign_out') {
+                await FirebaseAuth.instance.signOut();
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const HalamanLogin()),
@@ -49,22 +51,16 @@ class HalamanUtama extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(0),
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Cari',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-            ),
             ListTile(
               title: const Text(
                 'Cari',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 30),
               ),
               onTap: () {
-                showSearch(context: context, delegate: BookSearchDelegate());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CariBuku()), // Navigate to CariBuku
+                );
               },
             ),
           ],

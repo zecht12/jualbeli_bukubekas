@@ -1,7 +1,14 @@
-import 'package:flutter/material.dart';
-import 'halaman_login.dart';
+// ignore_for_file: unused_import
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'halaman_login.dart';
+import 'halaman_registrasi.dart';
+import 'halaman_utama.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -11,39 +18,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Aplikasi Toko Buku',
+      title: 'Aplikasi Jual Beli Buku Bekas',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bookstore'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HalamanLogin()),
-            );
-          },
-          child: const Text(
-            'Login',
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
+      home: const HalamanLogin(),
     );
   }
 }
