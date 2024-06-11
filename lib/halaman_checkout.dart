@@ -156,7 +156,7 @@ class _HalamanCheckoutState extends State<HalamanCheckout> {
               style: TextStyle(color: Colors.red),
             ),
             const Text(
-              'Harap kirim bukti transaksi ke email brikut:',
+              'Harap kirim bukti transaksi ke email berikut:',
             ),
             const Text(
               'gilangprimaertansyah76@gmail.com',
