@@ -37,7 +37,14 @@ class DaftarBuku extends StatelessWidget {
                 child: Card(
                   child: Column(
                     children: [
-                      Image.network(book['cover']),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 450,
+                        child: Image.network(
+                          book['cover'],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -45,7 +52,7 @@ class DaftarBuku extends StatelessWidget {
                           children: [
                             Text(book['judul'], style: const TextStyle(fontSize: 20)),
                             Text('Penulis: ${book['penulis']}', style: const TextStyle(fontSize: 16)),
-                            Text('Kategori: ${book['kategori']}', style: const TextStyle(fontSize: 16)), // Added this line
+                            Text('Kategori: ${book['kategori']}', style: const TextStyle(fontSize: 16)),
                             Text('Harga: Rp ${book['harga']}', style: const TextStyle(fontSize: 16)),
                             Text('Jumlah Buku: ${book['jumlah_buku']}', style: const TextStyle(fontSize: 16)),
                             Text('Jumlah Halaman: ${book['jumlah_halaman']}', style: const TextStyle(fontSize: 16)),

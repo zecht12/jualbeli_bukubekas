@@ -97,8 +97,6 @@ class _HalamanCheckoutState extends State<HalamanCheckout> {
           'jumlah_buku': currentStock - quantity,
           'status': currentStock - quantity == 0 ? 'terjual' : 'ready',
         });
-
-        // Save checkout details to Firestore
         await FirebaseFirestore.instance.collection('checkouts').add({
           'bookId': widget.bookId,
           'bookTitle': widget.bookTitle,
@@ -155,6 +153,13 @@ class _HalamanCheckoutState extends State<HalamanCheckout> {
             const SizedBox(height: 16),
             const Text(
               'Harap screenshot invoice ini sebagai bukti transaksi.',
+              style: TextStyle(color: Colors.red),
+            ),
+            const Text(
+              'Harap kirim bukti transaksi ke email brikut:',
+            ),
+            const Text(
+              'gilangprimaertansyah76@gmail.com',
               style: TextStyle(color: Colors.red),
             ),
           ],
