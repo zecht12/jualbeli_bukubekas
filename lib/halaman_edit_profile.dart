@@ -20,6 +20,7 @@ class _HalamanEditProfileState extends State<HalamanEditProfile> {
   late TextEditingController _nimController;
   late TextEditingController _profileImageController;
   late TextEditingController _alamatController;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -43,17 +44,35 @@ class _HalamanEditProfileState extends State<HalamanEditProfile> {
 
   Future<void> _updateProfile() async {
     if (_formKey.currentState!.validate()) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .update({
-        'name': _nameController.text,
-        'email': _emailController.text,
-        'nim': _nimController.text,
-        'profileImage': _profileImageController.text,
-        'alamat': _alamatController.text,
+      setState(() {
+        _isLoading = true;
       });
-      Navigator.pop(context);
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .update({
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'nim': _nimController.text,
+          'profileImage': _profileImageController.text,
+          'alamat': _alamatController.text,
+        });
+        Navigator.pop(context);
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile: $e')),
+        );
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     }
   }
 
@@ -63,64 +82,75 @@ class _HalamanEditProfileState extends State<HalamanEditProfile> {
       appBar: AppBar(
         title: const Text('Edit Profile'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _nimController,
+                    decoration: const InputDecoration(labelText: 'NIM'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your NIM';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _profileImageController,
+                    decoration: const InputDecoration(labelText: 'Profile Image URL'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the profile image URL';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _alamatController,
+                    decoration: const InputDecoration(labelText: 'Address'),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _updateProfile,
+                    child: const Text('Save Changes'),
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _nimController,
-                decoration: const InputDecoration(labelText: 'NIM'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your NIM';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _profileImageController,
-                decoration: const InputDecoration(labelText: 'Profile Image URL'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the profile image URL';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _alamatController,
-                decoration: const InputDecoration(labelText: 'Address'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                child: const Text('Save Changes'),
-              ),
-            ],
+            ),
           ),
-        ),
+          if (_isLoading)
+            Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
       ),
     );
   }

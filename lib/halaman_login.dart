@@ -15,19 +15,30 @@ class HalamanLogin extends StatefulWidget {
 class _HalamanLoginState extends State<HalamanLogin> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+
+      await Future.delayed(const Duration(seconds: 2));
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HalamanUtama()),
       );
     } on FirebaseAuthException catch (e) {
       print('Error: ${e.message}');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -53,10 +64,12 @@ class _HalamanLoginState extends State<HalamanLogin> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: const Text('Login', style: TextStyle(fontSize: 20)),
-                ),
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: _login,
+                        child: const Text('Login', style: TextStyle(fontSize: 20)),
+                      ),
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
