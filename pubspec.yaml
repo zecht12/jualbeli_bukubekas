@@ -36,7 +36,6 @@ flutter_native_splash:
   ios: true
   web: true
 
-
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
