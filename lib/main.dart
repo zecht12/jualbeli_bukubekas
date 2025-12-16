@@ -1,14 +1,16 @@
-// ignore_for_file: unused_import
-
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'halaman_login.dart';
-import 'halaman_registrasi.dart';
-import 'halaman_utama.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jualbeli_buku_bekas/features/auth/presentation/pages/login_page.dart';
+import 'package:jualbeli_buku_bekas/features/main_navigation.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  await Supabase.initialize(
+    url: 'https://kitluqfpabwezzymjqpb.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdGx1cWZwYWJ3ZXp6eW1qcXBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4ODM4NDMsImV4cCI6MjA4MTQ1OTg0M30.yx3Q9keYd5La57pGn0_sGGUUHkGHARK3QZQnnZZlrG4',
+  );
+
   runApp(const MyApp());
 }
 
@@ -18,13 +20,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Aplikasi Jual Beli Buku Bekas',
+      title: 'Jual Beli Buku Bekas',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.light,
+        ),
+        useMaterial3: true,
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          filled: true,
+          fillColor: Colors.grey[50],
+        ),
       ),
-      home: const HalamanLogin(),
+      home: Supabase.instance.client.auth.currentUser != null
+          ? const MainNavigation()
+          : const LoginPage(),
     );
   }
 }
