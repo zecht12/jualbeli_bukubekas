@@ -28,14 +28,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadBooks() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
+    
     try {
       final data = await _controller.fetchBooks();
+      if (!mounted) return;
+
       setState(() {
         _books = data;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }
@@ -131,7 +136,9 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddBookPage()),
-          ).then((_) => _loadBooks()); 
+          ).then((_) {
+            if (mounted) _loadBooks(); 
+          }); 
         },
         label: const Text('Jual Buku'),
         icon: const Icon(Icons.add),

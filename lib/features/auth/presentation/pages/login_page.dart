@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; 
+import 'package:jualbeli_buku_bekas/main_navigation.dart'; 
 import 'package:jualbeli_buku_bekas/core/utils/input_validator.dart';
 import 'package:jualbeli_buku_bekas/features/auth/logic/auth_controller.dart';
 import 'package:jualbeli_buku_bekas/features/auth/presentation/pages/register_page.dart';
@@ -39,7 +41,19 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text,
       );
 
+      if (!mounted) return;
       setState(() => _isLoading = false);
+
+      final user = Supabase.instance.client.auth.currentUser;
+      
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainNavigation(),
+          ),
+        );
+      }
     }
   }
 

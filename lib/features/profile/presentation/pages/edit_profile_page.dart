@@ -66,7 +66,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
         imageFile: _selectedImage,
       );
 
+      if (!mounted) return;
+
       setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profil berhasil diperbarui'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      
+      Navigator.pop(context);
     }
   }
 

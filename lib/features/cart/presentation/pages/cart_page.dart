@@ -29,26 +29,37 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> _loadCart() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
+    
     try {
       final data = await _controller.fetchCartItems();
+      if (!mounted) return;
+
       setState(() {
         _items = data;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }
 
   Future<void> _removeItem(String id) async {
     await _controller.removeFromCart(context, id);
+    if (!mounted) return;
+    
     _loadCart();
   }
 
   Future<void> _handleCheckout() async {
     setState(() => _isCheckingOut = true);
+    
     await _controller.checkout(context, _items);
+
+    if (!mounted) return;
+
     setState(() => _isCheckingOut = false);
     _loadCart();
   }
@@ -147,7 +158,15 @@ class _CartPageState extends State<CartPage> {
           ),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context), // Kembali ke Home
+            onPressed: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Silakan klik tab Beranda untuk belanja')),
+                );
+              }
+            },
             child: const Text('Mulai Belanja'),
           ),
         ],

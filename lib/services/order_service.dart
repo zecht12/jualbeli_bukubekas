@@ -1,8 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jualbeli_buku_bekas/models/cart_item_model.dart';
+import 'package:jualbeli_buku_bekas/services/supabase_service.dart';
 
 class OrderService {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  final SupabaseClient _supabase = SupabaseService.client;
 
   Future<void> createOrder({
     required String userId,
@@ -14,7 +15,7 @@ class OrderService {
         'user_id': userId,
         'total_price': totalPrice,
         'status': 'DIPROSES',
-        'created_at': DateTime.now().toIso8601String(),
+        'created_at': DateTime.now().toUtc().toIso8601String(),
         'items_summary': items.map((e) => '${e.book.title} (x${e.quantity})').join(', '),
       });
     } catch (e) {

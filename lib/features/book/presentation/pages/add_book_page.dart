@@ -37,6 +37,17 @@ class _AddBookPageState extends State<AddBookPage> {
 
   void _handleSubmit() async {
     if (_formKey.currentState!.validate()) {
+      
+      if (_selectedImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Wajib upload foto sampul buku'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
       setState(() => _isLoading = true);
 
       await _controller.uploadBook(
@@ -47,7 +58,14 @@ class _AddBookPageState extends State<AddBookPage> {
         imageFile: _selectedImage,
       );
 
+      if (!mounted) return;
+
       setState(() => _isLoading = false);
+
+      Navigator.pop(context); 
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Buku berhasil ditayangkan!')),
+      );
     }
   }
 

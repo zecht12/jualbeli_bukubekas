@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jualbeli_buku_bekas/main_navigation.dart';
 import 'package:jualbeli_buku_bekas/core/utils/input_validator.dart';
 import 'package:jualbeli_buku_bekas/features/auth/logic/auth_controller.dart';
 import 'package:jualbeli_buku_bekas/shared/widgets/custom_button.dart';
@@ -44,7 +46,26 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text,
       );
 
+      if (!mounted) return;
+
       setState(() => _isLoading = false);
+
+      final user = Supabase.instance.client.auth.currentUser;
+
+      if (user != null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainNavigation()),
+          (route) => false,
+        );
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registrasi berhasil! Silakan login.')),
+          );
+          Navigator.pop(context);
+        }
+      }
     }
   }
 

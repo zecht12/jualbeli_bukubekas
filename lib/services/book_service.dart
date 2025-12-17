@@ -1,7 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jualbeli_buku_bekas/services/supabase_service.dart';
 
 class BookService {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  final SupabaseClient _supabase = SupabaseService.client;
   final String _table = 'books';
 
   Future<List<Map<String, dynamic>>> getAllBooks() async {
@@ -59,7 +60,7 @@ class BookService {
         'price': price,
         'image_url': imageUrl,
         'user_id': userId,
-        'created_at': DateTime.now().toIso8601String(),
+        'created_at': DateTime.now().toUtc().toIso8601String(),
       });
     } catch (e) {
       throw Exception('Gagal upload buku: $e');
@@ -78,7 +79,7 @@ class BookService {
         'title': title,
         'description': description,
         'price': price,
-        'updated_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
       };
 
       if (imageUrl != null) {

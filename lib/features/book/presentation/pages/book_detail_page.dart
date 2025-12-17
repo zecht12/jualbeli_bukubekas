@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:jualbeli_buku_bekas/core/utils/currency_formatter.dart';
-import 'package:jualbeli_buku_bekas/features/cart/logic/cart_controller.dart'; // Import Logic Cart
+import 'package:jualbeli_buku_bekas/features/cart/logic/cart_controller.dart';
+import 'package:jualbeli_buku_bekas/features/cart/presentation/pages/cart_page.dart'; 
 import 'package:jualbeli_buku_bekas/models/book_model.dart';
 import 'package:jualbeli_buku_bekas/shared/widgets/custom_button.dart';
 import 'package:jualbeli_buku_bekas/shared/widgets/custom_snackbar.dart';
@@ -23,8 +24,15 @@ class _BookDetailPageState extends State<BookDetailPage> {
   void _handleAddToCart() async {
     setState(() => _isAddingToCart = true);
     await _cartController.addToCart(context, widget.book.id);
-    
+    if (!mounted) return;
+
     setState(() => _isAddingToCart = false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CartPage(),
+      ),
+    );
   }
 
   @override
@@ -135,7 +143,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               const SizedBox(width: 16),
               Expanded(
                 child: CustomButton(
-                  text: 'Beli Sekarang', // Logikanya masuk keranjang dulu
+                  text: 'Beli Sekarang', 
                   isLoading: _isAddingToCart,
                   onPressed: _handleAddToCart,
                 ),

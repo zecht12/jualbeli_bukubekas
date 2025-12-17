@@ -49,15 +49,17 @@ class BookController {
         imageUrl: imageUrl,
         userId: user.id,
       );
+
       if (context.mounted) {
         CustomSnackbar.showSuccess(context, 'Buku berhasil ditayangkan!');
-        Navigator.pop(context);
       }
+
     } catch (e) {
       if (context.mounted) {
         String message = e.toString().replaceAll('Exception: ', '');
         CustomSnackbar.showError(context, message);
       }
+      rethrow; 
     }
   }
 }

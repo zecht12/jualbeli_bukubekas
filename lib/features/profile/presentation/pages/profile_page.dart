@@ -23,8 +23,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadProfile() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
+    
     final data = await _controller.fetchUserProfile();
+    if (!mounted) return;
+
     setState(() {
       _user = data;
       _isLoading = false;
@@ -51,13 +55,13 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             onPressed: () async {
-              final result = await Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditProfilePage(user: _user!),
                 ),
               );
-              if (result == true) {
+              if (mounted) {
                 _loadProfile();
               }
             },
