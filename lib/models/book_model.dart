@@ -1,54 +1,40 @@
 class BookModel {
   final String id;
-  final String userId;
   final String title;
   final String description;
   final int price;
   final String imageUrl;
+  final String userId;
   final String category;
   final String condition;
-  final bool isSold;
-  final DateTime createdAt;
+  final double rating;
+  final int stock;
 
   BookModel({
     required this.id,
-    required this.userId,
     required this.title,
     required this.description,
     required this.price,
     required this.imageUrl,
-    this.category = 'Umum',
-    this.condition = 'Bekas',
-    this.isSold = false,
-    required this.createdAt,
+    required this.userId,
+    required this.category,
+    required this.condition,
+    this.rating = 0.0,
+    this.stock = 1,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
     return BookModel(
       id: json['id'].toString(),
-      userId: json['user_id'] as String,
-      title: json['title'] as String,
+      title: json['title'] ?? '',
       description: json['description'] ?? '',
-      price: json['price'] as int,
+      price: json['price'] is int ? json['price'] : int.tryParse(json['price'].toString()) ?? 0,
       imageUrl: json['image_url'] ?? '',
-      category: json['category'] ?? 'Umum',
+      userId: json['user_id'] ?? '',
+      category: json['category'] ?? 'Lainnya',
       condition: json['condition'] ?? 'Bekas',
-      isSold: json['is_sold'] ?? false,
-      createdAt: DateTime.parse(json['created_at']),
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      stock: (json['stock'] as num?)?.toInt() ?? 1,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'user_id': userId,
-      'title': title,
-      'description': description,
-      'price': price,
-      'image_url': imageUrl,
-      'category': category,
-      'condition': condition,
-      'is_sold': isSold,
-      'created_at': createdAt,
-    };
   }
 }

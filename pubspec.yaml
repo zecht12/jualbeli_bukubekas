@@ -16,6 +16,9 @@ dependencies:
   shared_preferences: ^2.2.2
   image_picker: ^1.0.7
   supabase_flutter: ^2.12.0
+  timeago: ^3.6.1
+  audioplayers: ^6.0.0
+  webview_flutter: ^4.7.0
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +34,8 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/splash.png
+    - assets/sound/notif.wav
+    - assets/sound/
 
 flutter_native_splash:
   color: "#42a5f5"

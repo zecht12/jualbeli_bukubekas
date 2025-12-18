@@ -1,12 +1,15 @@
+import 'package:audioplayers/audioplayers.dart'; 
 import 'package:flutter/material.dart';
 import 'package:jualbeli_buku_bekas/features/book/presentation/pages/add_book_page.dart';
 import 'package:jualbeli_buku_bekas/features/book/presentation/pages/book_detail_page.dart';
 import 'package:jualbeli_buku_bekas/features/cart/presentation/pages/cart_page.dart';
+import 'package:jualbeli_buku_bekas/features/chat/presentation/pages/chat_list_page.dart'; 
 import 'package:jualbeli_buku_bekas/features/home/logic/home_controller.dart';
 import 'package:jualbeli_buku_bekas/features/home/presentation/widget/home_banner.dart';
 import 'package:jualbeli_buku_bekas/models/book_model.dart';
 import 'package:jualbeli_buku_bekas/shared/widgets/book_card.dart';
 import 'package:jualbeli_buku_bekas/shared/widgets/loading_spinner.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,14 +20,52 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomeController _controller = HomeController();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   
   bool _isLoading = true;
   List<BookModel> _books = [];
+  int _unreadCount = 0;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
     super.initState();
     _loadBooks();
+    _fetchUnreadCount();
+  }
+
+  Future<void> _playNotificationSound() async {
+    try {
+      await _audioPlayer.play(AssetSource('sound/notif.wav'));
+    } catch (e) {
+      debugPrint('Gagal memutar suara: $e');
+    }
+  }
+
+  Future<void> _fetchUnreadCount() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      final count = await Supabase.instance.client
+          .from('messages')
+          .count(CountOption.exact)
+          .eq('is_read', false)
+          .neq('sender_id', user.id);
+      
+      if (mounted) {
+        if (!_isFirstLoad && count > _unreadCount) {
+          _playNotificationSound();
+        }
+
+        setState(() {
+          _unreadCount = count;
+          _isFirstLoad = false;
+        });
+      }
+    } catch (e) {
+      // Abaikan error
+    }
   }
 
   Future<void> _loadBooks() async {
@@ -58,16 +99,36 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
+                MaterialPageRoute(builder: (context) => const ChatListPage()),
+              ).then((_) {
+                if (mounted) _fetchUnreadCount();
+              });
+            },
+            icon: _unreadCount > 0 
+                ? Badge(
+                    label: Text(_unreadCount > 99 ? '99+' : '$_unreadCount'),
+                    child: const Icon(Icons.chat_bubble_outline),
+                  )
+                : const Icon(Icons.chat_bubble_outline),
+            tooltip: 'Pesan',
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
                 MaterialPageRoute(builder: (context) => const CartPage()),
               );
             },
             icon: const Icon(Icons.shopping_cart_outlined),
+            tooltip: 'Keranjang',
           ),
         ],
       ),
 
       body: RefreshIndicator(
-        onRefresh: _loadBooks,
+        onRefresh: () async {
+          await Future.wait([_loadBooks(), _fetchUnreadCount()]);
+        },
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

@@ -11,38 +11,9 @@ class BookService {
           .from(_table)
           .select()
           .order('created_at', ascending: false);
-      
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       throw Exception('Gagal mengambil data buku: $e');
-    }
-  }
-
-  Future<Map<String, dynamic>> getBookById(String id) async {
-    try {
-      final response = await _supabase
-          .from(_table)
-          .select()
-          .eq('id', id)
-          .single();
-      
-      return response;
-    } catch (e) {
-      throw Exception('Buku tidak ditemukan');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getBooksByUserId(String userId) async {
-    try {
-      final response = await _supabase
-          .from(_table)
-          .select()
-          .eq('user_id', userId)
-          .order('created_at', ascending: false);
-      
-      return List<Map<String, dynamic>>.from(response);
-    } catch (e) {
-      throw Exception('Gagal memuat buku anda: $e');
     }
   }
 
@@ -52,6 +23,9 @@ class BookService {
     required int price,
     required String imageUrl,
     required String userId,
+    required String category,
+    required String condition,
+    required int stock,
   }) async {
     try {
       await _supabase.from(_table).insert({
@@ -60,6 +34,10 @@ class BookService {
         'price': price,
         'image_url': imageUrl,
         'user_id': userId,
+        'category': category,
+        'condition': condition,
+        'stock': stock,
+        'rating': 0.0,
         'created_at': DateTime.now().toUtc().toIso8601String(),
       });
     } catch (e) {
@@ -69,22 +47,22 @@ class BookService {
 
   Future<void> updateBook({
     required String id,
-    required String title,
-    required String description,
-    required int price,
+    String? title,
+    String? description,
+    int? price,
+    int? stock,
     String? imageUrl,
   }) async {
     try {
-      final updates = {
-        'title': title,
-        'description': description,
-        'price': price,
+      final updates = <String, dynamic>{
         'updated_at': DateTime.now().toUtc().toIso8601String(),
       };
 
-      if (imageUrl != null) {
-        updates['image_url'] = imageUrl;
-      }
+      if (title != null) updates['title'] = title;
+      if (description != null) updates['description'] = description;
+      if (price != null) updates['price'] = price;
+      if (stock != null) updates['stock'] = stock; // Update stok
+      if (imageUrl != null) updates['image_url'] = imageUrl;
 
       await _supabase.from(_table).update(updates).eq('id', id);
     } catch (e) {
@@ -100,16 +78,17 @@ class BookService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> searchBooks(String query) async {
+  Future<List<Map<String, dynamic>>> getMyBooks(String userId) async {
     try {
       final response = await _supabase
           .from(_table)
           .select()
-          .ilike('title', '%$query%');
+          .eq('user_id', userId)
+          .order('created_at', ascending: false);
       
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
-      throw Exception('Gagal mencari buku: $e');
+      throw Exception('Gagal mengambil buku saya: $e');
     }
   }
 }

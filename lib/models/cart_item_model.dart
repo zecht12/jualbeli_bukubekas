@@ -8,16 +8,35 @@ class CartItemModel {
   CartItemModel({
     required this.id,
     required this.book,
-    this.quantity = 1,
+    required this.quantity,
   });
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
+    var bookData = json['book'];
+
+    if (bookData is List) {
+      if (bookData.isEmpty) {
+        throw Exception("Data buku kosong/terhapus (List Kosong)");
+      }
+      bookData = bookData.first;
+    }
+    
+    if (bookData == null || bookData is! Map<String, dynamic>) {
+      if (json['books'] != null) {
+          bookData = json['books'];
+          if (bookData is List) {
+            if (bookData.isEmpty) throw Exception("Data buku kosong (books list empty)");
+            bookData = bookData.first;
+          }
+      } else {
+          throw Exception("Data buku tidak ditemukan atau format salah. Received: $bookData");
+      }
+    }
+
     return CartItemModel(
       id: json['id'].toString(),
-      book: BookModel.fromJson(json['books']), 
-      quantity: json['quantity'] ?? 1,
+      quantity: (json['quantity'] as num?)?.toInt() ?? 1,
+      book: BookModel.fromJson(bookData),
     );
   }
-
-  int get subTotal => book.price * quantity;
 }

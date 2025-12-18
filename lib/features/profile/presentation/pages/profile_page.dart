@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jualbeli_buku_bekas/features/auth/presentation/pages/login_page.dart';
 import 'package:jualbeli_buku_bekas/features/profile/logic/profile_controller.dart';
 import 'package:jualbeli_buku_bekas/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:jualbeli_buku_bekas/models/user_model.dart';
@@ -25,14 +26,34 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfile() async {
     if (!mounted) return;
     setState(() => _isLoading = true);
-    
+    if (_user?.avatarUrl != null) {
+      try {
+        await NetworkImage(_user!.avatarUrl!).evict();
+      } catch (e) {
+        // Abaikan error cache
+      }
+    }
+
     final data = await _controller.fetchUserProfile();
+    
     if (!mounted) return;
 
     setState(() {
       _user = data;
       _isLoading = false;
     });
+  }
+
+  Future<void> _handleLogout() async {
+    await _controller.logout(context);
+    
+    if (!mounted) return;
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (route) => false,
+    );
   }
 
   @override
@@ -42,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return Scaffold(
         body: Center(
           child: ElevatedButton(
-            onPressed: () => _controller.logout(context),
+            onPressed: _handleLogout,
             child: const Text('Silakan Login Ulang'),
           ),
         ),
@@ -154,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              _controller.logout(context);
+              _handleLogout();
             },
             child: const Text('Keluar', style: TextStyle(color: Colors.red)),
           ),

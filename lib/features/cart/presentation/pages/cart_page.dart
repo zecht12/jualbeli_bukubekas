@@ -55,7 +55,6 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _handleCheckout() async {
     setState(() => _isCheckingOut = true);
-    
     await _controller.checkout(context, _items);
 
     if (!mounted) return;
@@ -65,7 +64,7 @@ class _CartPageState extends State<CartPage> {
   }
 
   int get _totalPrice {
-    return _items.fold(0, (sum, item) => sum + item.book.price);
+    return _items.fold(0, (sum, item) => sum + (item.book.price * item.quantity));
   }
 
   @override
