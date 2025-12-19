@@ -1,7 +1,6 @@
 # Ujian Akhir Semester Pemrograman Mobile: Jual Beli Buku Bekas
 
 **Kelas**: TI22C1
-
 **Kelompok**: 1  
 
 **Anggota Kelompok**:  
@@ -115,14 +114,22 @@ Formulir untuk memperbarui data diri pengguna.
   - Alamat Lengkap
 - **Action**: Tombol "Simpan Perubahan" untuk mengupdate data.
 
-## 11. Riwayat Pembelian (Pembeli)
+## 11. Halaman Pembayaran (Payment Gateway)
+![Halaman Pembayaran](public/payment.jpeg)
+
+Setelah melakukan checkout, pengguna akan diarahkan ke halaman pembayaran yang terintegrasi dengan **Midtrans**. Halaman ini mendukung berbagai metode pembayaran, salah satunya QRIS.
+- **Informasi Transaksi**: Menampilkan total nominal yang harus dibayar dan ID Order.
+- **QRIS Code**: Kode QR dinamis yang dapat di-scan/diunduh untuk melakukan pembayaran melalui e-wallet (GoPay, OVO, dll) atau Mobile Banking.
+- **Status Cek**: Tombol untuk memeriksa status pembayaran secara manual.
+
+## 12. Riwayat Pembelian (Pembeli)
 ![Riwayat Pembelian](public/riwayat%20transaksi%20pembelian.jpeg)
 
-Tab "Pembelian Saya" menampilkan daftar pesanan yang telah dilakukan. Transaksi ini terhubung dengan sistem Midtrans.
+Tab "Pembelian Saya" menampilkan daftar pesanan yang telah dilakukan. Status transaksi akan diperbarui otomatis setelah pembayaran via Midtrans berhasil.
 - **Info Pesanan**: Menampilkan ID Order, item yang dibeli, dan total harga.
 - **Status**: Indikator status pesanan (misalnya "Selesai") dan informasi apakah pesanan sudah diulas.
 
-## 12. Manajemen Pesanan Masuk (Penjual)
+## 13. Manajemen Pesanan Masuk (Penjual)
 ![Pesanan Masuk](public/riwayat%20transaksi%20masuk.jpeg)
 
 Tab "Pesanan Masuk" ditujukan bagi pengguna saat bertindak sebagai penjual untuk mengelola pesanan.
@@ -131,6 +138,3 @@ Tab "Pesanan Masuk" ditujukan bagi pengguna saat bertindak sebagai penjual untuk
   - **Dikemas**: Menandai barang sedang disiapkan.
   - **Dikirim**: Menandai barang sudah dalam pengiriman.
   - **Selesai**: Menandai transaksi telah rampung.
-
-## Link Proyek
-- [YouTube](https://www.youtube.com/watch?v=lUIlfoa9RR0)
