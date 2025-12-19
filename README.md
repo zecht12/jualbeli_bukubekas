@@ -1,4 +1,4 @@
-# Ujian Akhir Semester Pemrograman Mobile: Jual Beli Buku Bekas
+# Ujian Akhir Semester Pemrograman Lanjut: Jual Beli Buku Bekas
 
 **Kelas**: TI22C1
 
