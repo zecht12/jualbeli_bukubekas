@@ -35,7 +35,6 @@ class CartController {
         return;
       }
       await _cartService.addToCart(userId, bookId, quantity: quantity);
-      
       if (context.mounted) {
         CustomSnackbar.showSuccess(context, 'Buku masuk keranjang!');
       }
@@ -74,6 +73,7 @@ class CartController {
       final customerEmail = user.email ?? 'no-email@example.com';
 
       final int totalPrice = items.fold(0, (sum, item) => sum + (item.book.price * item.quantity));
+      
       final String uniqueOrderId = 'ORDER-${DateTime.now().millisecondsSinceEpoch}';
 
       final String paymentUrl = await _midtransService.getPaymentUrl(
@@ -82,8 +82,8 @@ class CartController {
         customerName: customerName,
         customerEmail: customerEmail,
         customerPhone: customerPhone,
+        items: items,
       );
-
       await _orderService.createOrder(
         userId: user.id,
         totalPrice: totalPrice,
