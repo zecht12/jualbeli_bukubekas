@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jualbeli_buku_bekas/features/book/presentation/pages/my_books_page.dart';
 import 'package:jualbeli_buku_bekas/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:jualbeli_buku_bekas/features/home/presentation/pages/home_page.dart';
-import 'package:jualbeli_buku_bekas/features/cart/presentation/pages/cart_page.dart';
 import 'package:jualbeli_buku_bekas/features/order/presentation/pages/history_page.dart';
 import 'package:jualbeli_buku_bekas/features/profile/presentation/pages/profile_page.dart';
 
@@ -21,7 +20,6 @@ class _MainNavigationState extends State<MainNavigation> {
     const ChatListPage(),
     const MyBooksPage(),
     const HistoryPage(),
-    const CartPage(),
     const ProfilePage(),
   ];
 
@@ -44,7 +42,7 @@ class _MainNavigationState extends State<MainNavigation> {
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.fixed, 
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -65,11 +63,6 @@ class _MainNavigationState extends State<MainNavigation> {
             icon: Icon(Icons.receipt_long_outlined),
             activeIcon: Icon(Icons.receipt_long),
             label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            activeIcon: Icon(Icons.shopping_cart),
-            label: 'Keranjang',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
