@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jualbeli_buku_bekas/features/book/presentation/pages/my_books_page.dart';
-import 'package:jualbeli_buku_bekas/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:jualbeli_buku_bekas/features/home/presentation/pages/home_page.dart';
 import 'package:jualbeli_buku_bekas/features/order/presentation/pages/history_page.dart';
 import 'package:jualbeli_buku_bekas/features/profile/presentation/pages/profile_page.dart';
@@ -17,7 +16,6 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const ChatListPage(),
     const MyBooksPage(),
     const HistoryPage(),
     const ProfilePage(),
@@ -46,11 +44,6 @@ class _MainNavigationState extends State<MainNavigation> {
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            activeIcon: Icon(Icons.chat_bubble),
-            label: 'Pesan',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.storefront_outlined),
