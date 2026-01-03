@@ -1,4 +1,4 @@
-package com.example.jualbeli_buku_bekas
+package com.gpe.reebook
 
 import io.flutter.embedding.android.FlutterActivity
 

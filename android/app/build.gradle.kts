@@ -3,7 +3,6 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
-    // Gunakan ID plugin yang lengkap untuk Kotlin
     id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -14,22 +13,26 @@ if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
 
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
 val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
 
 android {
-    namespace = "com.example.jualbeli_buku_bekas"
+    namespace = "com.gpe.reebook"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        // PERBAIKAN: Ubah target Java ke 17 untuk menghilangkan warning obsolete
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        // Sesuaikan target JVM Kotlin ke 17 juga
         jvmTarget = "17"
     }
 
@@ -38,20 +41,33 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.jualbeli_buku_bekas"
-        
-        // PENTING: Set minSdk ke 21 agar WebView (Midtrans) berjalan lancar
-        minSdk = flutter.minSdkVersion 
+        applicationId = "com.gpe.reebook"
+        minSdk = flutter.minSdkVersion
         
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInt()
         versionName = flutterVersionName
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storeFile = if (keystoreProperties.getProperty("storeFile") != null) {
+                file(keystoreProperties.getProperty("storeFile"))
+            } else {
+                null
+            }
+            storePassword = keystoreProperties.getProperty("storePassword")
+        }
+    }
+
     buildTypes {
         getByName("release") {
-            // Menggunakan getByName untuk mengambil config debug
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true 
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 }
