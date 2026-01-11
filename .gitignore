@@ -44,3 +44,5 @@ app.*.map.json
 .vscode
 upload-key.jks
 /upload-key.jks
+upload-keystore.jks
+/upload-keystore.jks
