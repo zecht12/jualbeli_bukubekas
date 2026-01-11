@@ -4,7 +4,7 @@ import 'package:jualbeli_buku_bekas/models/cart_item_model.dart';
 
 class MidtransService {
   static const String _serverKey = '';
-  static const String _baseUrl = 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+  static const String _baseUrl = '';
 
   Future<String> getPaymentUrl({
     required String orderId,
