@@ -2,8 +2,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jualbeli_buku_bekas/services/supabase_service.dart';
 
 class BookService {
-  final SupabaseClient _supabase = SupabaseService.client;
+  final SupabaseClient _supabase;
   final String _table = 'books';
+
+  BookService({SupabaseClient? client}) 
+      : _supabase = client ?? SupabaseService.client;
 
   Future<List<Map<String, dynamic>>> getAllBooks() async {
     try {
@@ -61,7 +64,7 @@ class BookService {
       if (title != null) updates['title'] = title;
       if (description != null) updates['description'] = description;
       if (price != null) updates['price'] = price;
-      if (stock != null) updates['stock'] = stock; // Update stok
+      if (stock != null) updates['stock'] = stock;
       if (imageUrl != null) updates['image_url'] = imageUrl;
 
       await _supabase.from(_table).update(updates).eq('id', id);
